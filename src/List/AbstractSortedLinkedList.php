@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace SortedLinkedList\List;
 
-use Exception;
 use Generator;
+use SortedLinkedList\List\Exception\CouldNotAccessCurrentNodeException;
 use SortedLinkedList\List\Exception\CouldNotRemoveException;
 use SortedLinkedList\Node\AbstractNode;
 use SortedLinkedList\Sort\Exception\UnresolvedSortingException;
@@ -34,6 +34,7 @@ abstract class AbstractSortedLinkedList
      */
     public function insert($data): void
     {
+        $this->checkDataType($data);
         $nodeToAdd = $this->createNode($data);
 
         if ($this->head === null || $this->shouldBePlacedBefore($nodeToAdd->data, $this->head->data) === true) {
@@ -54,6 +55,8 @@ abstract class AbstractSortedLinkedList
      */
     public function remove($data): void
     {
+        $this->checkDataType($data);
+
         if ($this->head === null) {
             throw new CouldNotRemoveException();
         }
@@ -78,6 +81,8 @@ abstract class AbstractSortedLinkedList
      */
     public function has($data): bool
     {
+        $this->checkDataType($data);
+
         $current = $this->head;
         while ($current !== null) {
             if ($current->data === $data) {
@@ -121,7 +126,7 @@ abstract class AbstractSortedLinkedList
         $current = $this->head;
 
         if ($current === null) {
-            throw new Exception('This should not happen'); // @todo refactor to use custom exception
+            throw new CouldNotAccessCurrentNodeException();
         }
 
         while ($current->next !== null && $this->shouldBePlacedBefore($current->next->data, $nodeToAdd->data) === true) {
@@ -138,10 +143,22 @@ abstract class AbstractSortedLinkedList
     public function shouldBePlacedBefore($value, $valueToCompareTo): bool
     {
         if ($this->sort === SortedLinkedListSortEnum::ASC) {
+            /**
+             * @phpstan-ignore-next-line
+             * @todo check phpstan generics implementation to enforce it to understand both values being of same type
+             */
             return $value < $valueToCompareTo;
         }
 
+        /**
+         * @phpstan-ignore-next-line
+         * @todo solve phpstan understanding of enums to check missing strategy implementation
+         */
         if ($this->sort === SortedLinkedListSortEnum::DESC) {
+            /**
+             * @phpstan-ignore-next-line
+             * @todo check phpstan generics implementation to enforce it to understand both values being of same type
+             */
             return $value > $valueToCompareTo;
         }
 
@@ -159,5 +176,7 @@ abstract class AbstractSortedLinkedList
      * @return AbstractNode<T>
      */
     abstract public function createNode($data): AbstractNode;
+
+    abstract public function checkDataType(mixed $data): void;
 
 }

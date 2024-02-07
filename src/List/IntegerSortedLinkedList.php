@@ -5,27 +5,27 @@ declare(strict_types = 1);
 namespace SortedLinkedList\List;
 
 use SortedLinkedList\List\Exception\InvalidNodeTypePassedException;
-use SortedLinkedList\Node\StringNode;
+use SortedLinkedList\Node\IntegerNode;
 
 /**
- * @extends AbstractSortedLinkedList<string>
+ * @extends AbstractSortedLinkedList<int>
  */
-class StringSortedLinkedList extends AbstractSortedLinkedList
+class IntegerSortedLinkedList extends AbstractSortedLinkedList
 {
 
     /**
-     * @param string $data
+     * @param int $data
      */
-    public function createNode($data): StringNode
+    public function createNode($data): IntegerNode
     {
-        return new StringNode($data);
+        return new IntegerNode($data);
     }
 
     public function checkDataType(mixed $data): void
     {
-        if (is_string($data) === false) {
+        if (is_int($data) === false) {
             throw new InvalidNodeTypePassedException(
-                'string',
+                'int',
                 gettype($data),
             );
         }

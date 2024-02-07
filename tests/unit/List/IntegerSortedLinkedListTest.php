@@ -6,16 +6,16 @@ namespace SortedLinkedList\Tests\List;
 
 use PHPUnit\Framework\TestCase;
 use SortedLinkedList\List\Exception\InvalidNodeTypePassedException;
-use SortedLinkedList\List\StringSortedLinkedList;
+use SortedLinkedList\List\IntegerSortedLinkedList;
 use SortedLinkedList\Sort\SortedLinkedListSortEnum;
 
-class StringSortedLinkedListTest extends TestCase
+class IntegerSortedLinkedListTest extends TestCase
 {
 
     /**
      * @dataProvider provideSortingData
-     * @param string[] $expectedResult
-     * @param string[] $data
+     * @param int[] $expectedResult
+     * @param int[] $data
      */
     public function testStateKeptSorted(
         array $expectedResult,
@@ -23,7 +23,7 @@ class StringSortedLinkedListTest extends TestCase
         array $data
     ): void
     {
-        $list = new StringSortedLinkedList($sort);
+        $list = new IntegerSortedLinkedList($sort);
         foreach ($data as $singleData) {
             $list->insert($singleData);
         }
@@ -38,29 +38,29 @@ class StringSortedLinkedListTest extends TestCase
     {
         return [
             [
-                ['a', 'b', 'c'],
+                [1, 2, 3],
                 SortedLinkedListSortEnum::ASC,
-                ['c', 'b', 'a'],
+                [3, 2, 1],
             ],
             [
-                ['c', 'b', 'a'],
+                [3, 2, 1],
                 SortedLinkedListSortEnum::DESC,
-                ['c', 'b', 'a'],
+                [3, 2, 1],
             ],
         ];
     }
 
     /**
      * @dataProvider provideHasData
-     * @param string[] $data
+     * @param int[] $data
      */
     public function testHas(
         array $data,
-        string $search,
+        int $search,
         bool $expectedResult
     ): void
     {
-        $list = new StringSortedLinkedList(SortedLinkedListSortEnum::ASC);
+        $list = new IntegerSortedLinkedList(SortedLinkedListSortEnum::ASC);
         foreach ($data as $singleData) {
             $list->insert($singleData);
         }
@@ -75,18 +75,18 @@ class StringSortedLinkedListTest extends TestCase
     {
         return [
             [
-                ['a', 'b', 'c'],
-                'b',
+                [1, 2, 3],
+                2,
                 true,
             ],
             [
-                ['a', 'b', 'c'],
-                'd',
+                [1, 2, 3],
+                4,
                 false,
             ],
             [
                 [],
-                'd',
+                3,
                 false,
             ],
         ];
@@ -94,44 +94,44 @@ class StringSortedLinkedListTest extends TestCase
 
     public function testRemove(): void
     {
-        $list = new StringSortedLinkedList(SortedLinkedListSortEnum::ASC);
-        $list->insert('a');
-        $list->insert('b');
-        $list->insert('c');
+        $list = new IntegerSortedLinkedList(SortedLinkedListSortEnum::ASC);
+        $list->insert(1);
+        $list->insert(2);
+        $list->insert(3);
 
-        $list->remove('b');
+        $list->remove(2);
 
-        self::assertSame(['a', 'c'], $list->toArray());
+        self::assertSame([1, 3], $list->toArray());
     }
 
     public function testRemoveWillNotRemoveMultipleNodes(): void
     {
-        $list = new StringSortedLinkedList(SortedLinkedListSortEnum::ASC);
-        $list->insert('a');
-        $list->insert('b');
-        $list->insert('b');
-        $list->insert('c');
+        $list = new IntegerSortedLinkedList(SortedLinkedListSortEnum::ASC);
+        $list->insert(1);
+        $list->insert(2);
+        $list->insert(2);
+        $list->insert(3);
 
-        $list->remove('b');
+        $list->remove(2);
 
-        self::assertSame(['a', 'b', 'c'], $list->toArray());
+        self::assertSame([1, 2, 3], $list->toArray());
     }
 
     public function testToGenerator(): void
     {
-        $list = new StringSortedLinkedList(SortedLinkedListSortEnum::ASC);
-        $list->insert('a');
-        $list->insert('b');
-        $list->insert('c');
+        $list = new IntegerSortedLinkedList(SortedLinkedListSortEnum::ASC);
+        $list->insert(1);
+        $list->insert(2);
+        $list->insert(3);
 
         $generator = $list->toGenerator();
-        self::assertSame('a', $generator->current());
+        self::assertSame(1, $generator->current());
 
         $generator->next();
-        self::assertSame('b', $generator->current());
+        self::assertSame(2, $generator->current());
 
         $generator->next();
-        self::assertSame('c', $generator->current());
+        self::assertSame(3, $generator->current());
 
         $generator->next();
         self::assertNull($generator->current());
@@ -139,21 +139,21 @@ class StringSortedLinkedListTest extends TestCase
 
     public function testIsEmpty(): void
     {
-        $list = new StringSortedLinkedList(SortedLinkedListSortEnum::ASC);
+        $list = new IntegerSortedLinkedList(SortedLinkedListSortEnum::ASC);
         self::assertTrue($list->isEmpty());
 
-        $list->insert('a');
+        $list->insert(1);
         self::assertFalse($list->isEmpty());
     }
 
     public function testPassInvalidData(): void
     {
-        $list = new StringSortedLinkedList(SortedLinkedListSortEnum::ASC);
+        $list = new IntegerSortedLinkedList(SortedLinkedListSortEnum::ASC);
 
         $this->expectException(InvalidNodeTypePassedException::class);
 
         /** @phpstan-ignore-next-line */
-        $list->insert(1);
+        $list->insert('a');
     }
 
 }
