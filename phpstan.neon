@@ -1,0 +1,59 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+    - vendor/shipmonk/phpstan-rules/rules.neon
+
+parameters:
+    level: 9
+    tmpDir: .phpstan-tmp
+    paths:
+        - src
+        - tests
+    shipmonkRules:
+        allowComparingOnlyComparableTypes:
+            enabled: true
+        allowNamedArgumentOnlyInAttributes:
+            enabled: false
+        enforceNativeReturnTypehint:
+            enabled: true
+        enforceReadonlyPublicProperty:
+            enabled: false
+        forbidAssignmentNotMatchingVarDoc:
+            enabled: true
+            allowNarrowing: true
+        forbidCast:
+            enabled: true
+            blacklist: ['(array)', '(object)', '(unset)']
+        forbidCustomFunctions:
+            enabled: true
+            list:
+                'var_dump': 'Please remove all dump functions before comitting'
+                'dump': 'Please remove all dump functions before comitting'
+        forbidEnumInFunctionArguments:
+            enabled: true
+        forbidNullInAssignOperations:
+            enabled: true
+            blacklist: ['??=']
+        forbidNullInInterpolatedString:
+            enabled: true
+        forbidPhpDocNullabilityMismatchWithNativeTypehint:
+            enabled: true
+        forbidProtectedEnumMethod:
+            enabled: true
+        forbidVariableTypeOverwriting:
+            enabled: true
+        forbidUnsetClassField:
+            enabled: true
+        forbidUselessNullableReturn:
+            enabled: true
+        forbidUnusedException:
+            enabled: true
+        forbidUnusedMatchResult:
+            enabled: true
+        uselessPrivatePropertyNullability:
+            enabled: true
+        uselessPrivatePropertyDefaultValue:
+            enabled: false
